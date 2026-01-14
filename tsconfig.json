@@ -1,6 +1,10 @@
 {
   "compilerOptions": {
-    // Environment setup & latest features
+    "baseUrl": "./",
+    "paths": {
+      "@app/common": ["libs/common/src/index.ts"],
+      "@app/common/*": ["libs/common/src/*"]
+    },
     "lib": ["ESNext"],
     "target": "ESNext",
     "module": "Preserve",

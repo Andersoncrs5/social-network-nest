@@ -1,5 +1,8 @@
 {
   "compilerOptions": {
+    "paths": {
+      "@app/common": ["../../libs/common/src/index.ts"]
+    },
     "module": "NodeNext",
     "moduleResolution": "NodeNext",
     "target": "ESNext", 
