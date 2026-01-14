@@ -14,11 +14,21 @@ export class UserRepository extends BaseRepository<User> {
   }
 
   async findByEmail(email: string): Promise<User | null> {
-    return await this.findOneByOptions({ email } as any);
+    return await this.userRepository.findOne({ email } as any);
   }
 
   async existsByEmail(email: string): Promise<boolean> {
-    return await this.existsByOptions({ email } as any);
+    return await this.userRepository.exists({ email } as any);
   }
+
+  async findByUsername(username: string): Promise<User | null> {
+    return await this.userRepository.findOne({ username } as any);
+  }
+  
+  async existsByUsername(username: string): Promise<boolean> {
+    return await this.userRepository.exists({ username } as any);
+  }
+
+
 
 }
