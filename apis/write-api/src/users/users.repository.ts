@@ -1,37 +1,24 @@
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { User } from "./entities/user.entity";
 import { Repository } from "typeorm";
+import { User } from "./entities/user.entity";
+import { BaseRepository } from "@app/common"; 
 
 @Injectable()
-export class UserRepository {
+export class UserRepository extends BaseRepository<User> {
   constructor(
     @InjectRepository(User)
-    private readonly repository: Repository<User>,
-  ) {}
-
-  async findById(id: number): Promise<User | null> {
-    return await this.repository.findOne({ where: { id } })
-  }
-
-  async existsById(id: number) : Promise<boolean> {
-    return await this.repository.exists({ where: { id } })
+    private readonly userRepository: Repository<User>,
+  ) {
+    super(userRepository);
   }
 
   async findByEmail(email: string): Promise<User | null> {
-    return await this.repository.findOne({ where: { email } });
+    return await this.findOneByOptions({ email } as any);
   }
 
   async existsByEmail(email: string): Promise<boolean> {
-    return await this.repository.exists({ where: { email } })
-  }
-
-  async save(user: User): Promise<User> {
-    return await this.repository.save(user);
-  }
-
-  async delete(id: number): Promise<void> {
-    await this.repository.delete(id);
+    return await this.existsByOptions({ email } as any);
   }
 
 }
