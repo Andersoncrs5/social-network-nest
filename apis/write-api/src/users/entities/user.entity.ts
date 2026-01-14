@@ -1,5 +1,5 @@
-import { BaseEntity } from "src/utils/bases/base.entity";
 import { Column, Entity, Index } from "typeorm";
+import { BaseEntity } from "@app/common";
 
 @Entity('users')
 @Index('idx_username', ['username'])
