@@ -6,6 +6,8 @@ import { ValidationPipe, VersioningType } from '@nestjs/common';
 import { config as dotenvConfig } from 'dotenv';
 import fastifyCors from '@fastify/cors';
 import { initializeTransactionalContext } from 'typeorm-transactional';
+import { ResponseInterceptor } from '@app/common';
+import { AllExceptionsFilter } from './configs/exceptions/allExceptionsFilter';
 
 dotenvConfig();
 
@@ -20,6 +22,9 @@ async function bootstrap() {
       logger: true // O Logger do Fastify é excelente para debug
     })
   );
+
+  app.useGlobalInterceptors(new ResponseInterceptor());
+  app.useGlobalFilters(new AllExceptionsFilter());
 
   // 3. Configuração de CORS (Essencial para o front ou mobile acessar)
   await app.register(fastifyCors, {
