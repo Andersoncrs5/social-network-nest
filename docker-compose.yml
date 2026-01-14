@@ -1,0 +1,63 @@
+services:
+  social-pd:
+    image: pingcap/pd:latest
+    container_name: social-pd
+    command:
+      - --name=pd1
+      - --client-urls=http://0.0.0.0:2379
+      - --peer-urls=http://0.0.0.0:2380
+      - --advertise-client-urls=http://social-pd:2379
+      - --advertise-peer-urls=http://social-pd:2380
+      - --initial-cluster=pd1=http://social-pd:2380
+    ports:
+      - "2381:2379" 
+    networks:
+      - social_network_net
+
+  social-tikv:
+    image: pingcap/tikv:latest
+    container_name: social-tikv
+    command:
+      - --pd=social-pd:2379
+      - --addr=0.0.0.0:20160
+      - --advertise-addr=social-tikv:20160
+    ports:
+      - "20161:20160"
+    depends_on:
+      - social-pd
+    networks:
+      - social_network_net
+
+  social-tidb:
+    image: pingcap/tidb:latest
+    container_name: social-tidb
+    command:
+      - --store=tikv
+      - --path=social-pd:2379
+    ports:
+      - "4001:4000" 
+    depends_on:
+      - social-tikv
+    networks:
+      - social_network_net
+
+  social-dragonfly:
+    image: 'docker.dragonflydb.io/dragonflydb/dragonfly'
+    container_name: social-dragonfly
+    command: ["dragonfly", "--logtostderr", "--dir", "/data"]
+    ulimits:
+      memlock: -1
+    restart: unless-stopped
+    ports:
+      - "6380:6379" # Porta alterada no host para evitar conflito com Redis/Dragonfly do Java
+    volumes:
+      - social_dragonfly_data:/data
+    networks:
+      - social_network_net
+
+networks:
+  social_network_net:
+    driver: bridge
+
+volumes:
+  social_dragonfly_data: {}
