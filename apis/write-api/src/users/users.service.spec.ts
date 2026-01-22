@@ -3,10 +3,15 @@ import { UsersService } from './users.service.js';
 import { UserRepository } from './users.repository.js';
 import { User } from './entities/user.entity.js';
 import { ModelNotFoundException } from '@app/common';
+import { CryptoService } from '../configs/security/crypto/crypto.service.js';
+import { CreateUserDto } from './dto/create-user.dto.js';
+import { UserMapper } from '../utils/mappers/user-profile.mapper.js';
 
 describe('UsersService', () => {
   let service: UsersService;
   let repository: UserRepository;
+  let crypto: CryptoService;
+
   const mockUser = {
     id: '1',
     name: 'Darkness',
@@ -16,6 +21,17 @@ describe('UsersService', () => {
   const mockUserRepository = {
     findById: jest.fn(),
     delete: jest.fn(),
+    save: jest.fn(),
+  };
+
+  const mockCryptoService = {
+    hash: jest.fn(),
+    compare: jest.fn(),
+  };
+
+  const mockUserMapper = {
+    toEntity: jest.fn(),
+    toDTO: jest.fn(),
   };
 
   beforeEach(async () => {
@@ -27,15 +43,45 @@ describe('UsersService', () => {
           provide: UserRepository,
           useValue: mockUserRepository,
         },
+        {
+          provide: CryptoService,
+          useValue: mockCryptoService,
+        },
+        {
+          provide: UserMapper,
+          useValue: mockUserMapper,
+        },
       ],
     }).compile();
 
     service = module.get<UsersService>(UsersService);
     repository = module.get<UserRepository>(UserRepository);
+    crypto = module.get<CryptoService>(CryptoService);
   });
 
   it('should be defined', () => {
     expect(service).toBeDefined();
+  });
+
+  describe('create', () => {
+    it('should hash password and save user', async () => {
+      const dto: CreateUserDto = {
+        name: 'Darkness',
+        username: 'Darkness11244',
+        email: 'test@test.com',
+        password: '123',
+      };
+      mockUserMapper.toEntity.mockReturnValue(mockUser);
+      mockCryptoService.hash.mockResolvedValue('hashed_password');
+      mockUserRepository.save.mockResolvedValue(mockUser);
+      mockUserMapper.toDTO.mockReturnValue({ id: '1', name: 'Darkness' });
+
+      const result = await service.create(dto);
+
+      expect(crypto.hash).toHaveBeenCalledWith('123');
+      expect(repository.save).toHaveBeenCalled();
+      expect(result).toHaveProperty('id');
+    });
   });
 
   describe('findOneById', () => {
