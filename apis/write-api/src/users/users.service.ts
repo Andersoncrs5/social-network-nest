@@ -7,34 +7,32 @@ import { User } from './entities/user.entity';
 
 @Injectable()
 export class UsersService {
-constructor(
-    private readonly userRepository: UserRepository,
-  ) {}
+  constructor(private readonly userRepository: UserRepository) {}
 
-  async findOneById(id: string): Promise<User> {
-    const user: User | null = await this.userRepository.findById(id)
+  async findOneByIdSimple(id: string): Promise<User> {
+    const user: User | null = await this.userRepository.findById(id);
 
     if (user == null) {
-      throw new ModelNotFoundException("User not found")
+      throw new ModelNotFoundException('User not found');
     }
 
     return user;
   }
-  
-  create(createUserDto: CreateUserDto) {
-    return 'This action adds a new user';
+
+  async findOneById(id: string): Promise<User | null> {
+    return await this.userRepository.findById(id);
   }
 
-  findAll() {
-    return `This action returns all users`;
+  create(dto: CreateUserDto): User | null {
+    return null;
   }
 
-  
   update(id: string, updateUserDto: UpdateUserDto) {
     return `This action updates a #${id} user`;
   }
 
-  remove(id: string) {
-    return `This action removes a #${id} user`;
+  async remove(id: string): Promise<void> {
+    await this.findOneByIdSimple(id);
+    await this.userRepository.delete(id);
   }
 }
