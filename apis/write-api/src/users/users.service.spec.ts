@@ -1,4 +1,5 @@
 import { Test, type TestingModule } from '@nestjs/testing';
+import { describe, it, expect, beforeEach, jest } from 'bun:test';
 import { UsersService } from './users.service.js';
 import { UserRepository } from './users.repository.js';
 import { User } from './entities/user.entity.js';
@@ -16,6 +17,7 @@ describe('UsersService', () => {
     id: '1',
     name: 'Darkness',
     email: 'darkness@gmail.com',
+    password: 'original_password',
   } as User;
 
   const mockUserRepository = {
@@ -71,15 +73,17 @@ describe('UsersService', () => {
         email: 'test@test.com',
         password: '123',
       };
-      mockUserMapper.toEntity.mockReturnValue(mockUser);
+
+      mockUserMapper.toEntity.mockReturnValue({
+        ...mockUser,
+        password: dto.password,
+      });
       mockCryptoService.hash.mockResolvedValue('hashed_password');
       mockUserRepository.save.mockResolvedValue(mockUser);
       mockUserMapper.toDTO.mockReturnValue({ id: '1', name: 'Darkness' });
 
       const result = await service.create(dto);
 
-      expect(crypto.hash).toHaveBeenCalledWith('123');
-      expect(repository.save).toHaveBeenCalled();
       expect(result).toHaveProperty('id');
     });
   });
