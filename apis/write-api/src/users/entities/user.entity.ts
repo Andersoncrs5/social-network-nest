@@ -23,6 +23,6 @@ export class User extends BaseEntity {
   @Column({ type: 'timestamp', nullable: true })
   loginBlockAt: Date | null;
 
-  @Column({ type: 'smallint', nullable: true })
+  @Column({ type: 'smallint', nullable: true, default: 0 })
   attemptsLoginFailed: number;
 }
