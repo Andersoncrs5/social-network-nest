@@ -1,11 +1,10 @@
-import { Column, Entity, Index } from "typeorm";
-import { BaseEntity } from "@app/common";
+import { Column, Entity, Index } from 'typeorm';
+import { BaseEntity } from '@app/common';
 
 @Entity('users')
 @Index('idx_username', ['username'])
 @Index('idx_email', ['email'])
 export class User extends BaseEntity {
-  
   @Column({ length: 100, nullable: false })
   name: string;
 
@@ -15,7 +14,7 @@ export class User extends BaseEntity {
   @Column({ length: 150, unique: true, nullable: false })
   email: string;
 
-  @Column({ length: 300, nullable: false, select: false }) 
+  @Column({ length: 300, nullable: false, select: false })
   password: string;
 
   @Column({ length: 500, nullable: true })
@@ -24,4 +23,6 @@ export class User extends BaseEntity {
   @Column({ type: 'timestamp', nullable: true })
   loginBlockAt: Date | null;
 
+  @Column({ type: 'smallint', nullable: true })
+  attemptsLoginFailed: number;
 }
