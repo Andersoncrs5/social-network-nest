@@ -16,8 +16,13 @@ describe('UsersService', () => {
   const mockUser = {
     id: '1',
     name: 'Darkness',
+    username: 'Darkness',
     email: 'darkness@gmail.com',
     password: 'original_password',
+    attemptsLoginFailed: 0,
+    version: 1,
+    createdAt: new Date(),
+    updatedAt: new Date(),
   } as User;
 
   const mockUserRepository = {
@@ -122,10 +127,10 @@ describe('UsersService', () => {
       expect(mockUserRepository.findById).toHaveBeenCalledTimes(1);
     });
 
-    it('should throw ModelNotFoundException if user not found', async () => {
+    it('should throw ModelNotFoundException if user not found', () => {
       mockUserRepository.findById.mockResolvedValue(null);
 
-      await expect(service.findOneByIdSimple('999')).rejects.toThrow(
+      expect(service.findOneByIdSimple('999')).rejects.toThrow(
         ModelNotFoundException,
       );
       expect(mockUserRepository.findById).toHaveBeenCalledTimes(1);
