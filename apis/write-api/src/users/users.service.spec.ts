@@ -1,8 +1,8 @@
 import { Test, type TestingModule } from '@nestjs/testing';
-import { UsersService } from './users.service';
-import { UserRepository } from './users.repository';
+import { UsersService } from './users.service.js';
+import { UserRepository } from './users.repository.js';
+import { User } from './entities/user.entity.js';
 import { ModelNotFoundException } from '@app/common';
-import { User } from './entities/user.entity';
 
 describe('UsersService', () => {
   let service: UsersService;

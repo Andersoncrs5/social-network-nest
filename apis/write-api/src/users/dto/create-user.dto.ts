@@ -1,7 +1,7 @@
-import { UniqueEmail } from '../decorators/user/unique-email-user.decorator';
-import { UniqueUsername } from '../decorators/user/unique-username.decorator';
-import { EmailConstraint } from '@app/common/decorators/email-constraint.decorator';
 import { MaxLength, MinLength } from 'class-validator';
+import { UniqueUsername } from '../decorators/user/unique-username.decorator.js';
+import { EmailConstraint } from '@app/common/decorators/email-constraint.decorator.js';
+import { UniqueEmail } from '../decorators/user/unique-email-user.decorator.js';
 
 export class CreateUserDto {
   @MinLength(5)

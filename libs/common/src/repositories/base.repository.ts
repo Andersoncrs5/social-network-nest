@@ -2,7 +2,6 @@ import { Repository } from 'typeorm';
 import type { FindOptionsWhere, DeepPartial } from 'typeorm';
 import type { BaseEntity } from '../base/base.entity';
 
-
 export abstract class BaseRepository<T extends BaseEntity> {
   constructor(protected readonly repository: Repository<T>) {}
 
