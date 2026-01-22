@@ -8,7 +8,7 @@ import { User } from './users/entities/user.entity';
 @Module({
   imports: [
     TypeOrmModule.forRoot({
-      type: 'mysql', 
+      type: 'mysql',
       host: process.env.DB_HOST || 'localhost',
       port: Number(process.env.DB_PORT) || 4000,
       username: process.env.DB_USERNAME || 'root',
@@ -17,7 +17,7 @@ import { User } from './users/entities/user.entity';
       entities: [User],
       synchronize: true,
     }),
-    UsersModule
+    UsersModule,
   ],
   controllers: [AppController],
   providers: [AppService],
