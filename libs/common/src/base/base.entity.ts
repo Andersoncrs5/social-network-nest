@@ -7,7 +7,7 @@ import {
 } from 'typeorm';
 
 export abstract class BaseEntity {
-  @PrimaryGeneratedColumn({ type: 'bigint', unsigned: true })
+  @PrimaryGeneratedColumn({ unsigned: true })
   id!: string;
 
   @VersionColumn()
